@@ -1,7 +1,8 @@
-import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
+import pandas as pd
+import numpy as np
 
 # Load the data into a data frame
 df = pd.read_csv('all_stocks_5yr.csv')
@@ -18,6 +19,10 @@ df['year'] = df.index.year-2000
 
 X = df[['day_of_week', 'month', 'year', 'open']].values # Prediction values
 Y = df['close'] # Value to predict
+
+# Add weights to the prediction values (prioritize day of week)
+X_weights = [3, 1, 3, 1]
+X = np.multiply(X, X_weights)
 
 # Split the data into a training set and a test set
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=42)
